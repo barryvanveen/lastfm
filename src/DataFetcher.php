@@ -36,7 +36,7 @@ class DataFetcher
      *
      * @return array
      */
-    public function get($url)
+    public function get(string $url): array
     {
         $this->fetchResponse($url);
 
@@ -52,7 +52,7 @@ class DataFetcher
      *
      * @param string $url
      */
-    protected function fetchResponse($url)
+    protected function fetchResponse(string $url)
     {
         $this->responseString = $this->client->get($url);
     }
