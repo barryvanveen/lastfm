@@ -17,11 +17,13 @@
         }
     ],
     "require": {
-        "illuminate/support": "~5.1",
-        "php" : "~7.0"
+        "php": "~7.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "illuminate/support": "~5.1"
     },
     "require-dev": {
-        "phpunit/phpunit" : "~4.0||~5.0",
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "~4.0||~5.0",
         "squizlabs/php_codesniffer": "^2.3"
     },
     "autoload": {
@@ -36,8 +38,8 @@
     },
     "scripts": {
         "test": "phpunit",
-        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
-        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+        "check-style": "vendor/bin/php-cs-fixer fix --dry-run",
+        "fix-style": "vendor/bin/php-cs-fixer fix"
     },
     "extra": {
         "branch-alias": {
