@@ -27,6 +27,6 @@
         <log type="coverage-clover" target="coverage.xml" showUncoveredFiles="true"/>
     </logging>
     <php>
-        <env name="LASTFM_API_KEY" value="38dc5a5cdadf473d68d917462616869a"/>
+        <env name="LASTFM_API_KEY" value="foo"/>
     </php>
 </phpunit>

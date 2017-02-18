@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Barryvanveen\Lastfm;
 
+use Barryvanveen\Lastfm\Exceptions\MalformedDataException;
 use Barryvanveen\Lastfm\Exceptions\ResponseException;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 class DataFetcher
 {
+    const LASTFM_API_BASEURL = 'http://ws.audioscrobbler.com/2.0/';
+
     /** @var Client */
     protected $client;
 
@@ -17,67 +20,82 @@ class DataFetcher
     protected $responseString;
 
     /** @var array */
-    protected $responseData;
+    protected $data;
 
     /**
      * DataFetcher constructor.
-     *
-     * @param Client $client
      */
-    public function __construct(Client $client)
+    public function __construct()
     {
-        $this->client = $client;
+        $this->client = new Client([
+            'http_errors' => false,
+        ]);
     }
 
     /**
      * Get, parse and validate a response from the given url.
      *
-     * @param string $url
+     * @param array       $query
+     * @param null|string $pluck
      *
-     * @return array
+     * @return mixed
      */
-    public function get(string $url): array
+    public function get(array $query, $pluck = null)
     {
-        $this->fetchResponse($url);
+        $this->responseString = $this->client->get(self::LASTFM_API_BASEURL, [
+            'query' => $query,
+        ]);
 
-        $this->parseResponse();
+        $this->data = json_decode((string) $this->responseString->getBody(), true);
 
-        $this->validateResponse();
-
-        return $this->responseData;
-    }
-
-    /**
-     * Fetch the response using a Guzzle client.
-     *
-     * @param string $url
-     */
-    protected function fetchResponse(string $url)
-    {
-        $this->responseString = $this->client->get($url);
-    }
-
-    /**
-     * Parse JSON response into an associative array.
-     */
-    protected function parseResponse()
-    {
-        $this->responseData = json_decode((string) $this->responseString->getBody(), true);
-    }
-
-    /**
-     * Throw an exception of the status code of the response is not 200 OK.
-     *
-     * @throws ResponseException
-     */
-    protected function validateResponse()
-    {
-        if ($this->responseString->getStatusCode() == 200 && !isset($this->responseData['error'])) {
-            return;
+        if ($this->responseString->getStatusCode() !== 200) {
+            $this->throwResponseException();
         }
 
-        $errorMessage = 'Lastfm API error '.$this->responseData['error'].': '.$this->responseData['message'];
+        if (isset($pluck)) {
+            return $this->pluckData($this->data, $pluck);
+        }
 
-        throw new ResponseException($errorMessage);
+        return $this->data;
+    }
+
+    /**
+     * @throws ResponseException
+     */
+    protected function throwResponseException()
+    {
+        if ($this->data === null) {
+            throw new ResponseException('Undecodable response was returned.');
+        }
+
+        if (isset($this->data['error'], $this->data['message'])) {
+            throw new ResponseException($this->data['message'], $this->data['error']);
+        }
+
+        throw new ResponseException('Unknown error');
+    }
+
+    protected function pluckData($data, $pluck)
+    {
+        if (isset($data[$pluck])) {
+            return $data[$pluck];
+        }
+
+        if (strpos($pluck, '.') !== false) {
+            $keys = explode('.', $pluck);
+
+            $return = $data;
+            foreach ($keys as $key) {
+                if (!isset($return[$key])) {
+                    throw new MalformedDataException('Malformed response data. Could not return requested array key.');
+                }
+
+                $return = $return[$key];
+            }
+
+            return $return;
+        }
+
+        throw new MalformedDataException('Malformed response data. Could not return requested array key.');
     }
 }

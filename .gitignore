@@ -3,3 +3,4 @@
 /vendor
 coverage.xml
 .php_cs.cache
+phpunit.xml

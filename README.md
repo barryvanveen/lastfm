@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This package provides an intuitive fluid interface for mretrieve data from the last.fm API. At the moment only 
+This package provides an intuitive fluid interface to retrieve data from the last.fm API. At the moment only 
 user-related methods are supported, like retrieving the most played artists for last year. Adding more methods would 
 be easy, so let me know if you could use those. 
 
@@ -20,8 +20,7 @@ $ composer require barryvanveen/lastfm
 ```
 
 ## API keys
-You can create a last.fm API account at [http://www.last.fm/api/account/create](http://www.last
-.fm/api/account/create). 
+You can create a last.fm API account at [http://www.last.fm/api/account/create](http://www.last.fm/api/account/create). 
 
 You cannot view existing accounts after their creation, so store your credentials save.
 
@@ -33,9 +32,8 @@ use Barryvanveen\Lastfm\Lastfm;
 
 public function index()
 {
-    $albums = Lastfm::userTopAlbums('barryvanveen')
-                    ->get();
-
+    $albums = Lastfm::userTopAlbums('YourUserName')->get();
+    
     return view('home', compact('albums'));
 }
 ```
@@ -43,32 +41,27 @@ public function index()
 **All available methods**
 ```php
     // Get top albums for user
-    $albums = Lastfm::userTopAlbums('barryvanveen')
-                    ->get();
+    $albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')->get();
     
     // Get top artists for user
-    $artists = Lastfm::userTopArtists('barryvanveen')
-                     ->get();
+    $artists = Lastfm::userTopArtists('YourUserName', 'ApiKey')->get();
     
     // Get recent tracks for user
-    $tracks = Lastfm::userRecentTracks('barryvanveen')
-                    ->get();
+    $tracks = Lastfm::userRecentTracks('YourUserName', 'ApiKey')->get();
+    
+    // Get user info
+    $info = Lastfm::userInfo('YourUserName', 'ApiKey')->get();
     
     // Get track that user is now listening to
-    $trackOrFalse = Lastfm::userRecentTracks('barryvanveen')
-                          ->getNowListening();
-        
-    // Get user info
-    $info = Lastfm::userInfo('barryvanveen')
-                  ->get();
+    $trackOrFalse = Lastfm::nowListening('YourUserName', 'ApiKey');
                            
     // Define time period for results
-    $albums = Lastfm::userTopAlbums('barryvanveen')
+    $albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')
                     ->period(Barryvanveen\Lastfm\Constants::PERIOD_WEEK);
                     ->get();
                      
     // Limit number of results
-    $albums = Lastfm::userTopAlbums('barryvanveen')
+    $albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')
                     ->limit(5);
                     ->get();                            
 ```
@@ -80,16 +73,15 @@ public function index()
     const PERIOD_3_MONTHS = '3month';
     const PERIOD_6_MONTHS = '6month';
     const PERIOD_YEAR     = '12month';
-    const PERIOD_EVER     = 'overall';
+    const PERIOD_OVERALL  = 'overall';
 ```
-
-More constants are available in `/barryvanveen/lastfm/Constants.php`.
 
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Testing
+Copy `phpunit.xml.dist` to `phpunit.xml` and fill in your own LASTFM_API_KEY. Then run the tests using:  
 
 ``` bash
 $ composer test
