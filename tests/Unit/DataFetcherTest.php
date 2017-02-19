@@ -7,22 +7,18 @@ namespace Tests\Unit;
 use Barryvanveen\Lastfm\DataFetcher;
 use Barryvanveen\Lastfm\Exceptions\MalformedDataException;
 use Barryvanveen\Lastfm\Exceptions\ResponseException;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DataFetcherTest extends TestCase
 {
     /** @var DataFetcher */
     protected $dataFetcher;
 
-    protected $api_key;
-
     public function setUp()
     {
         parent::setUp();
 
         $this->dataFetcher = new DataFetcher();
-
-        $this->api_key = $_ENV['LASTFM_API_KEY'];
     }
 
     /** @test */
@@ -32,7 +28,7 @@ class DataFetcherTest extends TestCase
             'method' => 'user.getinfo',
             'user' => 'rj',
             'format' => 'json',
-            'api_key' => $this->api_key,
+            'api_key' => $this->lastfm_api_key,
         ]);
 
         $this->assertNotEmpty($return);
@@ -47,7 +43,7 @@ class DataFetcherTest extends TestCase
             'method' => 'user.getinfo',
             'user' => 'rj',
             'format' => 'json',
-            'api_key' => $this->api_key,
+            'api_key' => $this->lastfm_api_key,
         ], 'user');
 
         $this->assertNotEmpty($return);
@@ -62,7 +58,7 @@ class DataFetcherTest extends TestCase
             'method' => 'user.getinfo',
             'user' => 'rj',
             'format' => 'json',
-            'api_key' => $this->api_key,
+            'api_key' => $this->lastfm_api_key,
         ], 'user.image.0.#text');
 
         $this->assertEquals('https://lastfm-img2.akamaized.net/i/u/34s/b26d6fd11de240a1c045dfb5c5d9fe65.png', $return);
@@ -77,7 +73,7 @@ class DataFetcherTest extends TestCase
             'method' => 'user.getinfo',
             'user' => 'rj',
             'format' => 'json',
-            'api_key' => $this->api_key,
+            'api_key' => $this->lastfm_api_key,
         ], 'this_array_key_doesnt_exist');
 
         $this->fail('This statement should not be reached.');
@@ -92,7 +88,7 @@ class DataFetcherTest extends TestCase
             'method' => 'user.getinfo',
             'user' => 'rj',
             'format' => 'json',
-            'api_key' => $this->api_key,
+            'api_key' => $this->lastfm_api_key,
         ], 'image.this_subkey_doesnt_exist');
 
         $this->fail('This statement should not be reached.');

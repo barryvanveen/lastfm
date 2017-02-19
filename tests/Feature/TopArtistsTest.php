@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use Barryvanveen\Lastfm\Lastfm;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class TopArtistsTest extends TestCase
 {
     /** @test */
     public function the_top_artists_are_returned()
     {
-        $artists = Lastfm::userTopArtists('rj', $_ENV['LASTFM_API_KEY'])->get();
+        $artists = Lastfm::userTopArtists('rj', $this->lastfm_api_key)->get();
 
         $this->assertNotEmpty($artists);
         $this->assertCount(50, $artists);
