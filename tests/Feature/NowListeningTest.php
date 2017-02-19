@@ -12,7 +12,7 @@ class NowListeningTest extends TestCase
     /** @test */
     public function it_returns_false_if_not_currently_playing_anything()
     {
-        $now_playing = Lastfm::nowListening('rj', $_ENV['LASTFM_API_KEY']);
+        $now_playing = Lastfm::nowListening('rj', getenv('LASTFM_API_KEY'));
 
         $this->assertEquals(false, $now_playing);
     }
