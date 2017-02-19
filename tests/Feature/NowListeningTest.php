@@ -7,7 +7,7 @@ namespace Tests\Feature;
 use Barryvanveen\Lastfm\Lastfm;
 use PHPUnit\Framework\TestCase;
 
-class nowListeningTest extends TestCase
+class NowListeningTest extends TestCase
 {
     /** @test */
     public function it_returns_false_if_not_currently_playing_anything()

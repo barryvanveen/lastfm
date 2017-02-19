@@ -7,7 +7,7 @@ namespace Tests\Feature;
 use Barryvanveen\Lastfm\Lastfm;
 use PHPUnit\Framework\TestCase;
 
-class topArtistsTest extends TestCase
+class TopArtistsTest extends TestCase
 {
     /** @test */
     public function the_top_artists_are_returned()

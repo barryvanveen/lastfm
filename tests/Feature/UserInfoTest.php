@@ -7,7 +7,7 @@ namespace Tests\Feature;
 use Barryvanveen\Lastfm\Lastfm;
 use PHPUnit\Framework\TestCase;
 
-class userInfoTest extends TestCase
+class UserInfoTest extends TestCase
 {
     /** @test */
     public function the_user_info_is_returned()
