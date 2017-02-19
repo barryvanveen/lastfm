@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-
-    /** @var  string */
+    /** @var string */
     protected $lastfm_api_key;
 
     public function setUp()
@@ -16,5 +15,4 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->lastfm_api_key = getenv('LASTFM_API_KEY');
     }
-
 }
