@@ -1,4 +1,4 @@
-/coverage
+/build
 /node_modules
 /vendor
 coverage.xml
