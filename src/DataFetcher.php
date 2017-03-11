@@ -24,12 +24,12 @@ class DataFetcher
 
     /**
      * DataFetcher constructor.
+     *
+     * @param Client $client
      */
-    public function __construct()
+    public function __construct(Client $client)
     {
-        $this->client = new Client([
-            'http_errors' => false,
-        ]);
+        $this->client = $client;
     }
 
     /**
@@ -43,12 +43,13 @@ class DataFetcher
     public function get(array $query, $pluck = null)
     {
         $this->responseString = $this->client->get(self::LASTFM_API_BASEURL, [
+            'http_errors' => false,
             'query' => $query,
         ]);
 
         $this->data = json_decode((string) $this->responseString->getBody(), true);
 
-        if ($this->responseString->getStatusCode() !== 200) {
+        if ($this->responseString->getStatusCode() !== 200 || $this->data === null) {
             $this->throwResponseException();
         }
 
@@ -60,6 +61,8 @@ class DataFetcher
     }
 
     /**
+     * Throw an exception detailing what went wrong with this request.
+     *
      * @throws ResponseException
      */
     protected function throwResponseException()
@@ -75,6 +78,22 @@ class DataFetcher
         throw new ResponseException('Unknown error');
     }
 
+    /**
+     * Pluck a specific index from the data array. $pluck may be a classic index or a dot-notated index, in which
+     * case the data array will be walked through recursively.
+     *
+     * Example 1: $data = ['foo' => 'bar', 'baz' => 'asd'],     $pluck = 'foo',      return = 'bar'
+     * Example 2: $data = ['foo' => ['bar' => 'baz']],          $pluck = 'foo.bar',  return = 'baz'
+     * Example 3: $data = ['foo' => [0 => 'bar', 1 => 'asd']],  $pluck = 'foo.1',    return = 'asd'
+     * Example 4: $data = ['foo' => 'bar', 'baz' => 'asd'],     $pluck = '123',      MalformedDataException
+     *
+     * @param array  $data
+     * @param string $pluck
+     *
+     * @throws MalformedDataException
+     *
+     * @return mixed
+     */
     protected function pluckData($data, $pluck)
     {
         if (isset($data[$pluck])) {

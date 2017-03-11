@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Barryvanveen\Lastfm\Lastfm;
-use Tests\TestCase;
+use Tests\LastfmTestCase;
 
-class RecentTracksTest extends TestCase
+class RecentTracksTest extends LastfmTestCase
 {
     /** @test */
     public function most_recent_tracks_are_returned()
     {
-        $tracks = Lastfm::userRecentTracks('rj', $this->lastfm_api_key)->get();
+        $tracks = $this->lastfm->userRecentTracks('rj')->get();
 
         $this->assertNotEmpty($tracks);
         $this->assertCount(50, $tracks);

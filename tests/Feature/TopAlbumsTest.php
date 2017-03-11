@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Barryvanveen\Lastfm\Lastfm;
-use Tests\TestCase;
+use Tests\LastfmTestCase;
 
-class TopAlbumsTest extends TestCase
+class TopAlbumsTest extends LastfmTestCase
 {
     /** @test */
     public function the_top_albums_are_returned()
     {
-        $albums = Lastfm::userTopAlbums('rj', $this->lastfm_api_key)->get();
+        $albums = $this->lastfm->userTopAlbums('rj')->get();
 
         $this->assertNotEmpty($albums);
         $this->assertCount(50, $albums);

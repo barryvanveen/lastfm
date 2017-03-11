@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Barryvanveen\Lastfm\Lastfm;
-use Tests\TestCase;
+use Tests\LastfmTestCase;
 
-class UserInfoTest extends TestCase
+class UserInfoTest extends LastfmTestCase
 {
     /** @test */
     public function the_user_info_is_returned()
     {
-        $user = Lastfm::userInfo('rj', $this->lastfm_api_key)->get();
+        $user = $this->lastfm->userInfo('rj')->get();
 
         $this->assertNotEmpty($user);
         $this->assertArrayHasKey('name', $user);

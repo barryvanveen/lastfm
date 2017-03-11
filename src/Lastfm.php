@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Barryvanveen\Lastfm;
 
 use Barryvanveen\Lastfm\Exceptions\InvalidPeriodException;
+use GuzzleHttp\Client;
 
 class Lastfm
 {
+    /** @var Client */
+    protected $httpClient;
+
     /** @var array */
     protected $query;
 
@@ -21,114 +25,113 @@ class Lastfm
      * Protected Lastfm constructor. Use any of the named constructors (eg. userInfo, userTopAlbums, etc) to
      * instantiate a Lastfm object.
      *
-     * @param array $query
-     * @param null  $pluck
+     * @param Client $client
+     * @param string $api_key
+     *
+     * @return LastFm
      */
-    protected function __construct(array $query, $pluck = null)
+    public function __construct(Client $client, string $api_key)
     {
-        $this->query = $query;
+        $this->httpClient = $client;
 
-        $this->pluck = $pluck;
+        $this->api_key = $api_key;
+
+        return $this;
     }
 
     /**
      * @param string $username
-     * @param string $api_key
      *
      * @return Lastfm
      */
-    public static function userInfo(string $username, string $api_key): Lastfm
+    public function userInfo(string $username): Lastfm
     {
-        $query = [
+        $this->query = [
             'method' => 'user.getInfo',
             'format' => 'json',
             'user' => $username,
-            'api_key' => $api_key,
+            'api_key' => $this->api_key,
         ];
 
-        $pluck = 'user';
+        $this->pluck = 'user';
 
-        return new self($query, $pluck);
+        return $this;
     }
 
     /**
      * @param string $username
-     * @param string $api_key
      *
      * @return Lastfm
      */
-    public static function userTopAlbums(string $username, string $api_key): Lastfm
+    public function userTopAlbums(string $username): Lastfm
     {
-        $query = [
+        $this->query = [
             'method' => 'user.getTopAlbums',
             'format' => 'json',
             'user' => $username,
-            'api_key' => $api_key,
+            'api_key' => $this->api_key,
         ];
 
-        $pluck = 'topalbums.album';
+        $this->pluck = 'topalbums.album';
 
-        return new self($query, $pluck);
+        return $this;
     }
 
     /**
      * @param string $username
-     * @param string $api_key
      *
      * @return Lastfm
      */
-    public static function userTopArtists(string $username, string $api_key): Lastfm
+    public function userTopArtists(string $username): Lastfm
     {
-        $query = [
+        $this->query = [
             'method' => 'user.getTopArtists',
             'format' => 'json',
             'user' => $username,
-            'api_key' => $api_key,
+            'api_key' => $this->api_key,
         ];
 
-        $pluck = 'topartists.artist';
+        $this->pluck = 'topartists.artist';
 
-        return new self($query, $pluck);
+        return $this;
     }
 
     /**
      * @param string $username
-     * @param string $api_key
      *
      * @return Lastfm
      */
-    public static function userTopTracks(string $username, string $api_key): Lastfm
+    public function userTopTracks(string $username): Lastfm
     {
-        $query = [
+        $this->query = [
             'method' => 'user.getTopTracks',
             'format' => 'json',
             'user' => $username,
-            'api_key' => $api_key,
+            'api_key' => $this->api_key,
         ];
 
-        $pluck = 'toptracks.track';
+        $this->pluck = 'toptracks.track';
 
-        return new self($query, $pluck);
+        return $this;
     }
 
     /**
      * @param string $username
-     * @param string $api_key
      *
      * @return Lastfm
      */
-    public static function userRecentTracks(string $username, string $api_key): Lastfm
+    public function userRecentTracks(string $username): Lastfm
     {
-        $query = [
+        $this->query = [
             'method' => 'user.getRecentTracks',
             'format' => 'json',
             'user' => $username,
-            'api_key' => $api_key,
+            'api_key' => $this->api_key,
         ];
 
-        $pluck = 'recenttracks.track';
+        $this->pluck = 'recenttracks.track';
 
-        return new self($query, $pluck);
+        return $this;
     }
 
     /**
@@ -186,26 +189,33 @@ class Lastfm
      */
     public function get(): array
     {
-        $dataFetcher = new DataFetcher();
+        $dataFetcher = new DataFetcher($this->httpClient);
 
         $this->data = $dataFetcher->get($this->query, $this->pluck);
 
         return $this->data;
     }
 
-    public static function nowListening(string $username, string $api_key)
+    /**
+     * Retrieve the track that is currently playing or "false" if not
+     * currently playing any track.
+     *
+     * @param string $username
+     *
+     * @return array|bool
+     */
+    public function nowListening(string $username)
     {
-        $query = [
+        $this->query = [
             'method' => 'user.getRecentTracks',
             'format' => 'json',
             'user' => $username,
-            'api_key' => $api_key,
+            'api_key' => $this->api_key,
         ];
 
-        $pluck = 'recenttracks.track.0';
+        $this->pluck = 'recenttracks.track.0';
 
-        $lastfm = new self($query, $pluck);
-        $most_recent_track = $lastfm->limit(1)->get();
+        $most_recent_track = $this->limit(1)->get();
 
         if (!isset($most_recent_track['@attr']['nowplaying'])) {
             return false;
