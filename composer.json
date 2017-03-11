@@ -1,12 +1,12 @@
 {
-    "name": "Barryvanveen/Lastfm",
+    "name": "barryvanveen/lastfm",
     "type": "library",
     "description": "A Last.fm API client for PHP 7+",
     "keywords": [
         "Barryvanveen",
         "Lastfm"
     ],
-    "homepage": "https://github.com/Barryvanveen/Lastfm",
+    "homepage": "https://github.com/barryvanveen/lastfm",
     "license": "MIT",
     "authors": [
         {
@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "php": "~7.0",
+        "php": ">=7.0",
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
