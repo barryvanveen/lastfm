@@ -36,22 +36,27 @@ class Lastfm
 
         $this->api_key = $api_key;
 
+        $this->query = [
+            'format' => 'json',
+            'api_key' => $this->api_key,
+        ];
+
         return $this;
     }
 
     /**
+     * Get an array with user information.
+     *
      * @param string $username
      *
      * @return Lastfm
      */
     public function userInfo(string $username): Lastfm
     {
-        $this->query = [
+        $this->query = array_merge($this->query, [
             'method' => 'user.getInfo',
-            'format' => 'json',
             'user' => $username,
-            'api_key' => $this->api_key,
-        ];
+        ]);
 
         $this->pluck = 'user';
 
@@ -59,18 +64,18 @@ class Lastfm
     }
 
     /**
+     * Get an array of top albums.
+     *
      * @param string $username
      *
      * @return Lastfm
      */
     public function userTopAlbums(string $username): Lastfm
     {
-        $this->query = [
+        $this->query = array_merge($this->query, [
             'method' => 'user.getTopAlbums',
-            'format' => 'json',
             'user' => $username,
-            'api_key' => $this->api_key,
-        ];
+        ]);
 
         $this->pluck = 'topalbums.album';
 
@@ -78,18 +83,18 @@ class Lastfm
     }
 
     /**
+     * Get an array of top artists.
+     *
      * @param string $username
      *
      * @return Lastfm
      */
     public function userTopArtists(string $username): Lastfm
     {
-        $this->query = [
+        $this->query = array_merge($this->query, [
             'method' => 'user.getTopArtists',
-            'format' => 'json',
             'user' => $username,
-            'api_key' => $this->api_key,
-        ];
+        ]);
 
         $this->pluck = 'topartists.artist';
 
@@ -97,18 +102,18 @@ class Lastfm
     }
 
     /**
+     * Get an array of top tracks.
+     *
      * @param string $username
      *
      * @return Lastfm
      */
     public function userTopTracks(string $username): Lastfm
     {
-        $this->query = [
+        $this->query = array_merge($this->query, [
             'method' => 'user.getTopTracks',
-            'format' => 'json',
             'user' => $username,
-            'api_key' => $this->api_key,
-        ];
+        ]);
 
         $this->pluck = 'toptracks.track';
 
@@ -116,18 +121,18 @@ class Lastfm
     }
 
     /**
+     * Get an array of most recent tracks.
+     *
      * @param string $username
      *
      * @return Lastfm
      */
     public function userRecentTracks(string $username): Lastfm
     {
-        $this->query = [
+        $this->query = array_merge($this->query, [
             'method' => 'user.getRecentTracks',
-            'format' => 'json',
             'user' => $username,
-            'api_key' => $this->api_key,
-        ];
+        ]);
 
         $this->pluck = 'recenttracks.track';
 
@@ -149,7 +154,7 @@ class Lastfm
             throw new InvalidPeriodException('Request period is not valid. Valid values are defined in \Barryvanveen\Lastfm\Constants::PERIODS.');
         }
 
-        $this->query = array_merge($this->query, ['period' => $period]);
+        $this->query = array_merge($this->query ?? [], ['period' => $period]);
 
         return $this;
     }
@@ -163,7 +168,7 @@ class Lastfm
      */
     public function limit(int $limit)
     {
-        $this->query = array_merge($this->query, ['limit' => $limit]);
+        $this->query = array_merge($this->query ?? [], ['limit' => $limit]);
 
         return $this;
     }
@@ -177,7 +182,7 @@ class Lastfm
      */
     public function page(int $page)
     {
-        $this->query = array_merge($this->query, ['page' => $page]);
+        $this->query = array_merge($this->query ?? [], ['page' => $page]);
 
         return $this;
     }

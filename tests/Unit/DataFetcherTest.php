@@ -108,7 +108,7 @@ class DataFetcherTest extends TestCase
     /** @test */
     public function it_throws_an_unknown_error_when_no_error_message_is_returned_with_an_http_error_code()
     {
-        $dataFetcher = $this->getDatafetcherWithMockedHandler(400, LastfmMockResponses::responseWithoutErrorMessage());
+        $dataFetcher = $this->getDatafetcherWithMockedHandler(400, LastfmMockResponses::empty());
 
         $this->expectException(ResponseException::class);
         $this->expectExceptionMessage('Unknown error');

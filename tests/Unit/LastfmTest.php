@@ -6,66 +6,251 @@ namespace Tests\Unit;
 
 use Barryvanveen\Lastfm\Constants;
 use Barryvanveen\Lastfm\Exceptions\InvalidPeriodException;
-use Tests\LastfmTestCase;
+use Barryvanveen\Lastfm\Lastfm;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+use Tests\LastfmMockResponses;
+use Tests\TestCase;
 
-class LastfmTest extends LastfmTestCase
+class LastfmTest extends TestCase
 {
-    /** @test */
-    public function it_returns_an_array()
+    /**
+     * @param int    $code
+     * @param string $response
+     * @param array  $callHistory
+     *
+     * @return Client
+     */
+    private function getPreparedHttpClient(int $code, string $response, array &$callHistory): Client
     {
-        $albums = $this->lastfm->userTopAlbums('rj')->get();
+        $history = Middleware::history($callHistory);
 
-        $this->assertCount(50, $albums);
+        $mock = new MockHandler([
+            new Response($code, [], $response),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        return new Client(['handler' => $stack]);
+    }
+
+    /**
+     * @param array $callHistory
+     *
+     * @return string
+     */
+    private function getQueryFromCallHistory($callHistory): string
+    {
+        return $callHistory[0]['request']->getUri()->getQuery();
     }
 
     /** @test */
-    public function it_retrieves_albums_for_a_certain_period()
+    public function constructor_sets_base_query_parameters()
     {
-        $albums_ever = $this->lastfm->userTopAlbums('rj')->period(Constants::PERIOD_OVERALL)
-                ->get();
+        $callHistory = [];
 
-        $albums_week = $this->lastfm->userTopAlbums('rj')->period(Constants::PERIOD_WEEK)->get();
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userInfo(), $callHistory);
 
-        $this->assertNotEquals($albums_ever, $albums_week, 'Failed to assert that retrieved topAlbums differ for different periods.');
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userInfo('myUserName')->get();
+
+        $this->assertHasSubstring('format=json', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('api_key='.$this->lastfm_api_key, $this->getQueryFromCallHistory($callHistory));
     }
 
     /** @test */
-    public function it_throws_an_exception_when_given_an_invalid_period()
+    public function userinfo_sets_required_query_parameters()
     {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userInfo(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userInfo('myUserName')->get();
+
+        $this->assertHasSubstring('method=user.getInfo', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userTopAlbums_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userTopAlbums(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userTopAlbums('myUserName')->get();
+
+        $this->assertHasSubstring('method=user.getTopAlbums', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userTopArtists_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userTopArtists(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userTopArtists('myUserName')->get();
+
+        $this->assertHasSubstring('method=user.getTopArtists', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userTopTracks_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userTopTracks(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userTopTracks('myUserName')->get();
+
+        $this->assertHasSubstring('method=user.getTopTracks', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userRecentTracks_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userRecentTracks(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userRecentTracks('myUserName')->get();
+
+        $this->assertHasSubstring('method=user.getRecentTracks', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_requesting_an_invalid_period()
+    {
+        $client = new Client();
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+
         $this->expectException(InvalidPeriodException::class);
 
-        $this->lastfm->userTopAlbums('rj')->period('not_a_valid_period')->get();
+        $lastfm->period('not-existing-period');
 
-        $this->fail('We should never reach this statement');
+        $this->fail('This statement should not be reached.');
     }
 
     /** @test */
-    public function it_limits_the_number_of_requested_items()
+    public function it_adds_the_period_query_to_the_request()
     {
-        $albums = $this->lastfm->userTopAlbums('rj')->limit(5)->get();
+        $callHistory = [];
 
-        $this->assertCount(5, $albums);
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::empty(), $callHistory);
 
-        $albums = $this->lastfm->userTopAlbums('rj')->limit(15)->get();
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->period(Constants::PERIOD_YEAR)->get();
 
-        $this->assertCount(15, $albums);
+        $this->assertHasSubstring('period=12month', $this->getQueryFromCallHistory($callHistory));
     }
 
     /** @test */
-    public function it_retrieves_a_page_of_results()
+    public function it_overrides_an_existing_period_query()
     {
-        $total_albums = $this->lastfm->userTopAlbums('rj')->limit(10)->get();
+        $callHistory = [];
 
-        $first_albums = $this->lastfm->userTopAlbums('rj')->limit(5)->page(1)->get();
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::empty(), $callHistory);
 
-        for ($i = 0; $i < 5; ++$i) {
-            $this->assertEquals($total_albums[$i]['name'], $first_albums[$i]['name']);
-        }
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->period(Constants::PERIOD_YEAR)->period(Constants::PERIOD_WEEK)->get();
 
-        $second_albums = $this->lastfm->userTopAlbums('rj')->limit(5)->page(2)->get();
+        $this->assertHasSubstring('period=7day', $this->getQueryFromCallHistory($callHistory));
+        $this->assertNotHasSubstring('period=12month', $this->getQueryFromCallHistory($callHistory));
+    }
 
-        for ($i = 0; $i < 5; ++$i) {
-            $this->assertEquals($total_albums[5 + $i]['name'], $second_albums[$i]['name']);
-        }
+    /** @test */
+    public function it_adds_the_limit_query_to_the_request()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::empty(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->limit(5)->get();
+
+        $this->assertHasSubstring('limit=5', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function it_overrides_an_existing_limit_query()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::empty(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->limit(5)->limit(321)->get();
+
+        $this->assertHasSubstring('limit=321', $this->getQueryFromCallHistory($callHistory));
+        $this->assertNotHasSubstring('limit=5', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function it_adds_the_page_query_to_the_request()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::empty(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->page(1)->get();
+
+        $this->assertHasSubstring('page=1', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function it_overrides_an_existing_page_query()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::empty(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->page(1)->page(2)->get();
+
+        $this->assertHasSubstring('page=2', $this->getQueryFromCallHistory($callHistory));
+        $this->assertNotHasSubstring('page=1', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function it_returns_false_if_not_currently_playing_anything()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::notNowListening(), $callHistory);
+
+        $lastfm = new Lastfm($client, 'fakeApiKey');
+        $now_playing = $lastfm->nowListening('anyUserName');
+
+        $this->assertEquals(false, $now_playing);
+    }
+
+    /** @test */
+    public function it_returns_the_track_that_is_currently_playing()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::nowListening(), $callHistory);
+
+        $lastfm = new Lastfm($client, 'fakeApiKey');
+        $now_playing = $lastfm->nowListening('anyUserName');
+
+        $this->assertNotEmpty($now_playing);
+        $this->assertArrayHasKey('artist', $now_playing);
     }
 }
