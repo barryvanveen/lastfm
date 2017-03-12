@@ -7,9 +7,16 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This package provides an intuitive fluid interface to retrieve data from the last.fm API. At the moment only 
-user-related methods are supported, like retrieving the most played artists for last year. Adding more methods would 
-be easy, so let me know if you could use those. 
+This package provides an intuitive fluid interface to retrieve data from the last.fm API. A Laravel service provider 
+is included.
+
+At the moment only user-related methods are supported, like retrieving the most played artists for last year. Adding 
+more methods would be easy, so let me know if you could use those. 
+
+## API keys
+You can create a last.fm API account at [http://www.last.fm/api/account/create](http://www.last.fm/api/account/create). 
+
+You cannot view existing accounts after their creation, so keep your credentials save.
 
 ## Install
 
@@ -19,10 +26,11 @@ Via Composer
 $ composer require barryvanveen/lastfm
 ```
 
-## API keys
-You can create a last.fm API account at [http://www.last.fm/api/account/create](http://www.last.fm/api/account/create). 
+If you want to use the Laravel service provider:
 
-You cannot view existing accounts after their creation, so store your credentials save.
+1. Add `Barryvanveen\Lastfm\LastfmServiceprovider::class` to the list of service providers in `/config/app.php`.
+2. Publish the config file using `php  artisan vendor:publish --provider="Barryvanveen\Lastfm\LastfmServiceProvider"`
+3. Add a LASTFM_API_KEY variable to your .env configuration.
 
 ## Usage
 
@@ -35,6 +43,18 @@ public function index()
 {
     $lastfm = new Lastfm(new Client(), 'YourApiKey');
     
+    $albums = $lastfm->userTopAlbums('YourUserName')->get();
+    
+    return view('home', compact('albums'));
+}
+```
+
+**Laravel Dependency Injection**
+```php
+use Barryvanveen\Lastfm\Lastfm;
+ 
+public function index(Lastfm $lastfm)
+{
     $albums = $lastfm->userTopAlbums('YourUserName')->get();
     
     return view('home', compact('albums'));
