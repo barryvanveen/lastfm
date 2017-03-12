@@ -27,21 +27,15 @@ class Lastfm
      *
      * @param Client $client
      * @param string $api_key
-     *
-     * @return LastFm
      */
     public function __construct(Client $client, string $api_key)
     {
         $this->httpClient = $client;
 
-        $this->api_key = $api_key;
-
         $this->query = [
             'format' => 'json',
-            'api_key' => $this->api_key,
+            'api_key' => $api_key,
         ];
-
-        return $this;
     }
 
     /**
@@ -140,6 +134,32 @@ class Lastfm
     }
 
     /**
+     * Retrieve the track that is currently playing or "false" if not
+     * currently playing any track.
+     *
+     * @param string $username
+     *
+     * @return array|bool
+     */
+    public function nowListening(string $username)
+    {
+        $this->query = array_merge($this->query, [
+            'method' => 'user.getRecentTracks',
+            'user' => $username,
+        ]);
+
+        $this->pluck = 'recenttracks.track.0';
+
+        $most_recent_track = $this->limit(1)->get();
+
+        if (!isset($most_recent_track['@attr']['nowplaying'])) {
+            return false;
+        }
+
+        return $most_recent_track;
+    }
+
+    /**
      * Set or overwrite the period requested from the Last.fm API.
      *
      * @param string $period
@@ -199,33 +219,5 @@ class Lastfm
         $this->data = $dataFetcher->get($this->query, $this->pluck);
 
         return $this->data;
-    }
-
-    /**
-     * Retrieve the track that is currently playing or "false" if not
-     * currently playing any track.
-     *
-     * @param string $username
-     *
-     * @return array|bool
-     */
-    public function nowListening(string $username)
-    {
-        $this->query = [
-            'method' => 'user.getRecentTracks',
-            'format' => 'json',
-            'user' => $username,
-            'api_key' => $this->api_key,
-        ];
-
-        $this->pluck = 'recenttracks.track.0';
-
-        $most_recent_track = $this->limit(1)->get();
-
-        if (!isset($most_recent_track['@attr']['nowplaying'])) {
-            return false;
-        }
-
-        return $most_recent_track;
     }
 }

@@ -32,7 +32,7 @@ class LastfmServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/lastfm.php', 'lastfm');
 
-        $this->app->bind(Lastfm::class, function ($app) {
+        $this->app->bind(Lastfm::class, function () {
             return new Lastfm(new \GuzzleHttp\Client(), config('lastfm.api_key'));
         });
     }
