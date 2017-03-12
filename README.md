@@ -29,10 +29,13 @@ You cannot view existing accounts after their creation, so store your credential
 **Basic Example**
 ```php
 use Barryvanveen\Lastfm\Lastfm;
+use GuzzleHttp\Client;
  
 public function index()
 {
-    $albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')->get();
+    $lastfm = new Lastfm(new Client(), 'YourApiKey');
+    
+    $albums = $lastfm->userTopAlbums('YourUserName')->get();
     
     return view('home', compact('albums'));
 }
@@ -41,38 +44,38 @@ public function index()
 **All available methods**
 ```php
 // Get top albums for user
-$albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')->get();
+$albums = $lastfm->userTopAlbums('YourUserName')->get();
  
 // Get top artists for user
-$artists = Lastfm::userTopArtists('YourUserName', 'ApiKey')->get();
+$artists = $lastfm->userTopArtists('YourUserName')->get();
  
 // Get recent tracks for user
-$tracks = Lastfm::userRecentTracks('YourUserName', 'ApiKey')->get();
+$tracks = $lastfm->userRecentTracks('YourUserName')->get();
  
 // Get user info
-$info = Lastfm::userInfo('YourUserName', 'ApiKey')->get();
+$info = $lastfm->userInfo('YourUserName')->get();
  
 // Get track that user is now listening to, or FALSE
-$trackOrFalse = Lastfm::nowListening('YourUserName', 'ApiKey');                      
+$trackOrFalse = $lastfm->nowListening('YourUserName');                      
 ```
 
 **Filter results**
 ```php
 // Define time period for results
-$albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')
-                ->period(Barryvanveen\Lastfm\Constants::PERIOD_WEEK)
-                ->get();
+$albums = $lastfm->userTopAlbums('YourUserName')
+                 ->period(Barryvanveen\Lastfm\Constants::PERIOD_WEEK)
+                 ->get();
                   
 // Limit number of results
-$albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')
-                ->limit(5)
-                ->get();     
+$albums = $lastfm->userTopAlbums('YourUserName')
+                 ->limit(5)
+                 ->get();     
                  
 // Retrieve paginated results
-$albums = Lastfm::userTopAlbums('YourUserName', 'ApiKey')
-                ->limit(5)
-                ->page(2)
-                ->get();     
+$albums = $lastfm->userTopAlbums('YourUserName')
+                 ->limit(5)
+                 ->page(2)
+                 ->get();     
 ```
 
 **Valid time periods**
