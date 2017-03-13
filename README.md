@@ -1,4 +1,8 @@
-# Last.fm API client for PHP 7+
+# Last.fm API client for PHP 7
+
+* Simple installation, easy to use
+* Includes a Laravel service provider
+* Tested code
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,18 +11,20 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This package provides an intuitive fluid interface to retrieve data from the last.fm API. A Laravel service provider 
-is included.
-
-At the moment only user-related methods are supported, like retrieving the most played artists for last year. Adding 
-more methods would be easy, so let me know if you could use those. 
+* [API keys](#api-keys)
+* [Installation](#installation)
+* [Laravel installation](#laravel-installation)
+* [Usage](#usage)
+    * [Basic example](#basic-example)
+    * [Laravel example](#laravel-example)
+    * [All available methods](#all-available-methods)
+    * [Filtering results](#filtering-results)
+    * [Valid time periods](#valid-time-periods)
 
 ## API keys
 You can create a last.fm API account at [http://www.last.fm/api/account/create](http://www.last.fm/api/account/create). 
 
-You cannot view existing accounts after their creation, so keep your credentials save.
-
-## Install
+## Installation
 
 Via Composer
 
@@ -26,30 +32,40 @@ Via Composer
 $ composer require barryvanveen/lastfm
 ```
 
-If you want to use the Laravel service provider:
+## Laravel installation
 
-1. Add `Barryvanveen\Lastfm\LastfmServiceprovider::class` to the list of service providers in `/config/app.php`.
-2. Publish the config file using `php  artisan vendor:publish --provider="Barryvanveen\Lastfm\LastfmServiceProvider"`
-3. Add a LASTFM_API_KEY variable to your .env configuration.
+Update `config/app.php` by adding the LastfmServiceProvider:
+```php
+'providers' => [
+    ...
+    Barryvanveen\Lastfm\LastfmServiceprovider::class,
+];
+```
+
+Add a LASTFM_API_KEY variable to your .env configuration. You could also publish the default configuration and alter it
+ yourself:
+
+```php
+php  artisan vendor:publish --provider="Barryvanveen\Lastfm\LastfmServiceProvider"
+```
+
+Tested against Laravel 5.* but probably works in most versions because it is so simple. Please create an issue if it 
+doesn't work for you. 
 
 ## Usage
 
-**Basic Example**
+### Basic example
 ```php
 use Barryvanveen\Lastfm\Lastfm;
 use GuzzleHttp\Client;
  
-public function index()
-{
-    $lastfm = new Lastfm(new Client(), 'YourApiKey');
+$lastfm = new Lastfm(new Client(), 'YourApiKey');
     
-    $albums = $lastfm->userTopAlbums('YourUserName')->get();
-    
-    return view('home', compact('albums'));
-}
+$albums = $lastfm->userTopAlbums('YourUserName')->get();
 ```
 
-**Laravel Dependency Injection**
+### Laravel example
+In Laravel you can use dependency injection if you have followed the Laravel installation.
 ```php
 use Barryvanveen\Lastfm\Lastfm;
  
@@ -61,7 +77,7 @@ public function index(Lastfm $lastfm)
 }
 ```
 
-**All available methods**
+### All available methods
 ```php
 // Get top albums for user
 $albums = $lastfm->userTopAlbums('YourUserName')->get();
@@ -79,33 +95,33 @@ $info = $lastfm->userInfo('YourUserName')->get();
 $trackOrFalse = $lastfm->nowListening('YourUserName');                      
 ```
 
-**Filter results**
+### Filtering results
 ```php
 // Define time period for results
-$albums = $lastfm->userTopAlbums('YourUserName')
-                 ->period(Barryvanveen\Lastfm\Constants::PERIOD_WEEK)
-                 ->get();
+$lastfm->userTopAlbums('YourUserName')
+       ->period(Barryvanveen\Lastfm\Constants::PERIOD_WEEK)
+       ->get();
                   
 // Limit number of results
-$albums = $lastfm->userTopAlbums('YourUserName')
-                 ->limit(5)
-                 ->get();     
+$lastfm->userTopAlbums('YourUserName')
+       ->limit(5)
+       ->get();     
                  
 // Retrieve paginated results
-$albums = $lastfm->userTopAlbums('YourUserName')
-                 ->limit(5)
-                 ->page(2)
-                 ->get();     
+$lastfm->userTopAlbums('YourUserName')
+       ->limit(5)
+       ->page(2)
+       ->get();     
 ```
 
-**Valid time periods**
+### Valid time periods
 ```php
-    const PERIOD_WEEK     = '7day';
-    const PERIOD_MONTH    = '1month';
-    const PERIOD_3_MONTHS = '3month';
-    const PERIOD_6_MONTHS = '6month';
-    const PERIOD_YEAR     = '12month';
-    const PERIOD_OVERALL  = 'overall';
+Barryvanveen\Lastfm\Constants::PERIOD_WEEK     = '7day';
+Barryvanveen\Lastfm\Constants::PERIOD_MONTH    = '1month';
+Barryvanveen\Lastfm\Constants::PERIOD_3_MONTHS = '3month';
+Barryvanveen\Lastfm\Constants::PERIOD_6_MONTHS = '6month';
+Barryvanveen\Lastfm\Constants::PERIOD_YEAR     = '12month';
+Barryvanveen\Lastfm\Constants::PERIOD_OVERALL  = 'overall';
 ```
 
 ## Change log
