@@ -61,7 +61,7 @@ use GuzzleHttp\Client;
  
 $lastfm = new Lastfm(new Client(), 'YourApiKey');
     
-$albums = $lastfm->userTopAlbums('YourUserName')->get();
+$albums = $lastfm->userTopAlbums('AnyUsername')->get();
 ```
 
 ### Laravel example
@@ -71,7 +71,7 @@ use Barryvanveen\Lastfm\Lastfm;
  
 public function index(Lastfm $lastfm)
 {
-    $albums = $lastfm->userTopAlbums('YourUserName')->get();
+    $albums = $lastfm->userTopAlbums('AnyUsername')->get();
     
     return view('home', compact('albums'));
 }
@@ -80,35 +80,35 @@ public function index(Lastfm $lastfm)
 ### All available methods
 ```php
 // Get top albums for user
-$albums = $lastfm->userTopAlbums('YourUserName')->get();
+$albums = $lastfm->userTopAlbums('AnyUsername')->get();
  
 // Get top artists for user
-$artists = $lastfm->userTopArtists('YourUserName')->get();
+$artists = $lastfm->userTopArtists('AnyUsername')->get();
  
 // Get recent tracks for user
-$tracks = $lastfm->userRecentTracks('YourUserName')->get();
+$tracks = $lastfm->userRecentTracks('AnyUsername')->get();
  
 // Get user info
-$info = $lastfm->userInfo('YourUserName')->get();
+$info = $lastfm->userInfo('AnyUsername')->get();
  
 // Get track that user is now listening to, or FALSE
-$trackOrFalse = $lastfm->nowListening('YourUserName');                      
+$trackOrFalse = $lastfm->nowListening('AnyUsername');                      
 ```
 
 ### Filtering results
 ```php
 // Define time period for results
-$lastfm->userTopAlbums('YourUserName')
+$lastfm->userTopAlbums('AnyUsername')
        ->period(Barryvanveen\Lastfm\Constants::PERIOD_WEEK)
        ->get();
                   
 // Limit number of results
-$lastfm->userTopAlbums('YourUserName')
+$lastfm->userTopAlbums('AnyUsername')
        ->limit(5)
        ->get();     
                  
 // Retrieve paginated results
-$lastfm->userTopAlbums('YourUserName')
+$lastfm->userTopAlbums('AnyUsername')
        ->limit(5)
        ->page(2)
        ->get();     
@@ -116,6 +116,7 @@ $lastfm->userTopAlbums('YourUserName')
 
 ### Valid time periods
 ```php
+// use these constants as an argument to ->period()
 Barryvanveen\Lastfm\Constants::PERIOD_WEEK     = '7day';
 Barryvanveen\Lastfm\Constants::PERIOD_MONTH    = '1month';
 Barryvanveen\Lastfm\Constants::PERIOD_3_MONTHS = '3month';
