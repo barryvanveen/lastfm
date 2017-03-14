@@ -11,6 +11,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Removed
 ### Fixed
 
+## [1.0.1] - 2017-03-14
+### Fixed
+- Fixed readme and composer.json meta-information 
+
 ## [1.0.0] - 2017-03-13
 ### Added
 - Initial release!

@@ -1,7 +1,7 @@
 {
     "name": "barryvanveen/lastfm",
     "type": "library",
-    "description": "A Last.fm API client for PHP 7+",
+    "description": "Last.fm API client for PHP 7+",
     "keywords": [
         "lastfm",
         "last.fm",
