@@ -1,9 +1,5 @@
 # Last.fm API client for PHP 7
 
-* Simple installation, easy to use
-* Includes a Laravel service provider
-* Tested code
-
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
