@@ -3,8 +3,14 @@
     "type": "library",
     "description": "A Last.fm API client for PHP 7+",
     "keywords": [
-        "Barryvanveen",
-        "Lastfm"
+        "lastfm",
+        "last.fm",
+        "api",
+        "client",
+        "php7",
+        "laravel",
+        "laravel5",
+        "service provider"
     ],
     "homepage": "https://github.com/barryvanveen/lastfm",
     "license": "MIT",
@@ -46,5 +52,8 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "support": {
+        "issues": "https://github.com/barryvanveen/lastfm/issues"
     }
 }
