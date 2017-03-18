@@ -16,6 +16,7 @@
     * [All available methods](#all-available-methods)
     * [Filtering results](#filtering-results)
     * [Valid time periods](#valid-time-periods)
+* [Official API docs](#official-api-docs)
 
 ## API keys
 You can create a last.fm API account at [http://www.last.fm/api/account/create](http://www.last.fm/api/account/create). 
@@ -120,6 +121,9 @@ Barryvanveen\Lastfm\Constants::PERIOD_6_MONTHS = '6month';
 Barryvanveen\Lastfm\Constants::PERIOD_YEAR     = '12month';
 Barryvanveen\Lastfm\Constants::PERIOD_OVERALL  = 'overall';
 ```
+
+## Official API docs
+Read the official API documentation at [http://www.last.fm/api](http://www.last.fm/api).
 
 ## Change log
 
