@@ -11,6 +11,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Removed
 ### Fixed
 
+## [1.0.2] - 2017-03-18
+### Fixed
+- Added a link to official API docs to readme
+
 ## [1.0.1] - 2017-03-14
 ### Fixed
 - Fixed readme and composer.json meta-information 
