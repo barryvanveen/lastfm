@@ -86,7 +86,7 @@ class DataFetcherTest extends TestCase
 
         $this->expectException(MalformedDataException::class);
 
-        $dataFetcher->get([], 'recenttracks.this_subkey_doesnt_exist');
+        $dataFetcher->get([], 'recenttracks.this.subkey.doesnt.exist');
 
         $this->fail('This statement should not be reached.');
     }

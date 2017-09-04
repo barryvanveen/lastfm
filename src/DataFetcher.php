@@ -100,21 +100,44 @@ class DataFetcher
             return $data[$pluck];
         }
 
-        if (strpos($pluck, '.') !== false) {
-            $keys = explode('.', $pluck);
-
-            $return = $data;
-            foreach ($keys as $key) {
-                if (!isset($return[$key])) {
-                    throw new MalformedDataException('Malformed response data. Could not return requested array key.');
-                }
-
-                $return = $return[$key];
-            }
-
-            return $return;
+        if (! $this->isNestedPluckString($pluck)) {
+            throw new MalformedDataException('Malformed response data. Could not return requested array key.');
         }
 
-        throw new MalformedDataException('Malformed response data. Could not return requested array key.');
+        $firstPluckPart = $this->getFirstPluckPart($pluck);
+
+        if (! isset($data[$firstPluckPart])) {
+            throw new MalformedDataException('Malformed response data. Could not return requested array key.');
+        }
+
+        $remainingPluckPart = $this->getRemainingPluckPart($pluck);
+
+        return $this->pluckData($data[$firstPluckPart], $remainingPluckPart);
+    }
+
+    protected function isNestedPluckString(string $pluck): bool
+    {
+        return (strpos($pluck, '.') !== false);
+    }
+
+    protected function getFirstPluckPart(string $pluck): string
+    {
+        $parts = $this->getPluckParts($pluck);
+
+        return array_shift($parts);
+    }
+
+    protected function getRemainingPluckPart(string $pluck): string
+    {
+        $parts = $this->getPluckParts($pluck);
+
+        array_shift($parts);
+
+        return implode('.', $parts);
+    }
+
+    protected function getPluckParts(string $pluck): array
+    {
+        return explode('.', $pluck);
     }
 }
