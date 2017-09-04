@@ -11,6 +11,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Removed
 ### Fixed
 
+## [1.1.1] - 2017-09-04
+### Changed
+- Improved readability of pluckData method
+
 ## [1.1.0] - 2017-09-04
 ### Added
 - Added composer meta data for Laravel 5.5 package discovery
