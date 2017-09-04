@@ -30,6 +30,13 @@ $ composer require barryvanveen/lastfm
 
 ## Laravel installation
 
+Add a LASTFM_API_KEY variable to your .env configuration. You could also publish the default configuration and alter it
+ yourself:
+
+```php
+php  artisan vendor:publish --provider="Barryvanveen\Lastfm\LastfmServiceProvider"
+```
+
 Update `config/app.php` by adding the LastfmServiceProvider:
 ```php
 'providers' => [
@@ -38,12 +45,7 @@ Update `config/app.php` by adding the LastfmServiceProvider:
 ];
 ```
 
-Add a LASTFM_API_KEY variable to your .env configuration. You could also publish the default configuration and alter it
- yourself:
-
-```php
-php  artisan vendor:publish --provider="Barryvanveen\Lastfm\LastfmServiceProvider"
-```
+If you are using Laravel 5.5 the service provider will be used automagically by Laravel's [package discovery](https://laravel.com/docs/5.5/packages#package-discovery).
 
 Tested against Laravel 5.* but probably works in most versions because it is so simple. Please create an issue if it 
 doesn't work for you. 
@@ -61,7 +63,6 @@ $albums = $lastfm->userTopAlbums('AnyUsername')->get();
 ```
 
 ### Laravel example
-In Laravel you can use dependency injection if you have followed the Laravel installation.
 ```php
 use Barryvanveen\Lastfm\Lastfm;
  
