@@ -100,13 +100,13 @@ class DataFetcher
             return $data[$pluck];
         }
 
-        if (! $this->isNestedPluckString($pluck)) {
+        if (!$this->isNestedPluckString($pluck)) {
             throw new MalformedDataException('Malformed response data. Could not return requested array key.');
         }
 
         $firstPluckPart = $this->getFirstPluckPart($pluck);
 
-        if (! isset($data[$firstPluckPart])) {
+        if (!isset($data[$firstPluckPart])) {
             throw new MalformedDataException('Malformed response data. Could not return requested array key.');
         }
 
@@ -117,7 +117,7 @@ class DataFetcher
 
     protected function isNestedPluckString(string $pluck): bool
     {
-        return (strpos($pluck, '.') !== false);
+        return strpos($pluck, '.') !== false;
     }
 
     protected function getFirstPluckPart(string $pluck): string
