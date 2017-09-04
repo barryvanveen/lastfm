@@ -6,11 +6,14 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [Unreleased][unreleased]
 ### Added
-- Added composer meta data for Laravel 5.5 package discovery
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+
+## [1.1.0] - 2017-09-04
+### Added
+- Added composer meta data for Laravel 5.5 package discovery
 
 ## [1.0.2] - 2017-03-18
 ### Fixed
