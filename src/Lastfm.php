@@ -115,6 +115,91 @@ class Lastfm
     }
 
     /**
+     * Get an array of weekly top albums.
+     *
+     * @param string $username
+     *
+     * @param \DateTime $startdate
+     * @return Lastfm
+     */
+    public function userWeeklyTopAlbums(string $username, \DateTime $startdate): Lastfm
+    {
+        $this->query = array_merge($this->query, [
+            'method' => 'user.getWeeklyAlbumChart',
+            'user' => $username,
+            'from' => $startdate->format("U"),
+            'to' => $startdate->modify("+7 day")->format("U")
+        ]);
+
+        $this->pluck = 'weeklyalbumchart.album';
+
+        return $this;
+    }
+
+    /**
+     * Get an array of weekly top artists.
+     *
+     * @param string $username
+     *
+     * @param \DateTime $startdate
+     * @return Lastfm
+     */
+    public function userWeeklyTopArtists(string $username, \DateTime $startdate): Lastfm
+    {
+        $this->query = array_merge($this->query, [
+            'method' => 'user.getWeeklyArtistChart',
+            'user' => $username,
+            'from' => $startdate->format("U"),
+            'to' => $startdate->modify("+7 day")->format("U")
+        ]);
+
+        $this->pluck = 'weeklyartistchart.artist';
+
+        return $this;
+    }
+
+    /**
+     * Get an array of weekly top tracks.
+     *
+     * @param string $username
+     *
+     * @param \DateTime $startdate
+     * @return Lastfm
+     */
+    public function userWeeklyTopTracks(string $username, \DateTime $startdate): Lastfm
+    {
+        $this->query = array_merge($this->query, [
+            'method' => 'user.getWeeklyTrackChart',
+            'user' => $username,
+            'from' => $startdate->format("U"),
+            'to' => $startdate->modify("+7 day")->format("U")
+        ]);
+
+        $this->pluck = 'weeklytrackchart.track';
+
+        return $this;
+    }
+
+    /**
+     * Get an array of weekly chart list.
+     *
+     * @param string $username
+     *
+     * @return Lastfm
+     */
+    public function userWeeklyChartList(string $username): Lastfm
+    {
+        $this->query = array_merge($this->query, [
+            'method' => 'user.getWeeklyChartList',
+            'user' => $username
+        ]);
+
+        $this->pluck = 'weeklychartlist.chart';
+
+        return $this;
+    }
+
+    /**
      * Get an array of most recent tracks.
      *
      * @param string $username
