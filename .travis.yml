@@ -14,7 +14,7 @@ cache:
     - $HOME/.composer/cache
 
 before_script:
-  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
+  - travis_retry composer install ${COMPOSER_FLAGS} --no-interaction --prefer-dist
 
 script:
   - vendor/bin/php-cs-fixer fix --dry-run -vvv
