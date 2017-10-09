@@ -11,6 +11,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Removed
 ### Fixed
 
+## [1.2.0] - 2017-09-10
+### Fixed
+- Added methods for retrieving weekly charts. Thanks @Bruno7kp!
+
 ## [1.1.2] - 2017-09-04
 ### Fixed
 - Fixed code style
