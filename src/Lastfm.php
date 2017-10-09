@@ -117,9 +117,9 @@ class Lastfm
     /**
      * Get an array of weekly top albums.
      *
-     * @param string $username
-     *
+     * @param string    $username
      * @param \DateTime $startdate
+     *
      * @return Lastfm
      */
     public function userWeeklyTopAlbums(string $username, \DateTime $startdate): Lastfm
@@ -127,8 +127,8 @@ class Lastfm
         $this->query = array_merge($this->query, [
             'method' => 'user.getWeeklyAlbumChart',
             'user' => $username,
-            'from' => $startdate->format("U"),
-            'to' => $startdate->modify("+7 day")->format("U")
+            'from' => $startdate->format('U'),
+            'to' => $startdate->modify('+7 day')->format('U'),
         ]);
 
         $this->pluck = 'weeklyalbumchart.album';
@@ -139,9 +139,9 @@ class Lastfm
     /**
      * Get an array of weekly top artists.
      *
-     * @param string $username
-     *
+     * @param string    $username
      * @param \DateTime $startdate
+     *
      * @return Lastfm
      */
     public function userWeeklyTopArtists(string $username, \DateTime $startdate): Lastfm
@@ -149,8 +149,8 @@ class Lastfm
         $this->query = array_merge($this->query, [
             'method' => 'user.getWeeklyArtistChart',
             'user' => $username,
-            'from' => $startdate->format("U"),
-            'to' => $startdate->modify("+7 day")->format("U")
+            'from' => $startdate->format('U'),
+            'to' => $startdate->modify('+7 day')->format('U'),
         ]);
 
         $this->pluck = 'weeklyartistchart.artist';
@@ -161,9 +161,9 @@ class Lastfm
     /**
      * Get an array of weekly top tracks.
      *
-     * @param string $username
-     *
+     * @param string    $username
      * @param \DateTime $startdate
+     *
      * @return Lastfm
      */
     public function userWeeklyTopTracks(string $username, \DateTime $startdate): Lastfm
@@ -171,8 +171,8 @@ class Lastfm
         $this->query = array_merge($this->query, [
             'method' => 'user.getWeeklyTrackChart',
             'user' => $username,
-            'from' => $startdate->format("U"),
-            'to' => $startdate->modify("+7 day")->format("U")
+            'from' => $startdate->format('U'),
+            'to' => $startdate->modify('+7 day')->format('U'),
         ]);
 
         $this->pluck = 'weeklytrackchart.track';
@@ -191,7 +191,7 @@ class Lastfm
     {
         $this->query = array_merge($this->query, [
             'method' => 'user.getWeeklyChartList',
-            'user' => $username
+            'user' => $username,
         ]);
 
         $this->pluck = 'weeklychartlist.chart';
