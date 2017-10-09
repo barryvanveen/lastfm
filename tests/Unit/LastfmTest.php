@@ -105,6 +105,74 @@ class LastfmTest extends TestCase
     }
 
     /** @test */
+    public function userWeeklyTopAlbums_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userWeeklyTopAlbums(), $callHistory);
+
+        $startDate = new \DateTime('2017-01-01');
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userWeeklyTopAlbums('myUserName', $startDate)->get();
+
+        $this->assertHasSubstring('method=user.getWeeklyAlbumChart', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('from=1483228800', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('to=1483833600', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userWeeklyTopArtists_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userWeeklyTopArtists(), $callHistory);
+
+        $startDate = new \DateTime('2017-01-01');
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userWeeklyTopArtists('myUserName', $startDate)->get();
+
+        $this->assertHasSubstring('method=user.getWeeklyArtistChart', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('from=1483228800', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('to=1483833600', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userWeeklyTopTracks_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userWeeklyTopTracks(), $callHistory);
+
+        $startDate = new \DateTime('2017-01-01');
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userWeeklyTopTracks('myUserName', $startDate)->get();
+
+        $this->assertHasSubstring('method=user.getWeeklyTrackChart', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('from=1483228800', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('to=1483833600', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
+    public function userWeeklyChartList_sets_required_query_parameters()
+    {
+        $callHistory = [];
+
+        $client = $this->getPreparedHttpClient(200, LastfmMockResponses::userWeeklyChartList(), $callHistory);
+
+        $lastfm = new Lastfm($client, $this->lastfm_api_key);
+        $lastfm->userWeeklyChartList('myUserName')->get();
+
+        $this->assertHasSubstring('method=user.getWeeklyChartList', $this->getQueryFromCallHistory($callHistory));
+        $this->assertHasSubstring('user=myUserName', $this->getQueryFromCallHistory($callHistory));
+    }
+
+    /** @test */
     public function userTopTracks_sets_required_query_parameters()
     {
         $callHistory = [];
