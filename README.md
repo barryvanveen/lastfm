@@ -90,7 +90,16 @@ $tracks = $lastfm->userRecentTracks('AnyUsername')->get();
 $info = $lastfm->userInfo('AnyUsername')->get();
  
 // Get track that user is now listening to, or FALSE
-$trackOrFalse = $lastfm->nowListening('AnyUsername');                      
+$trackOrFalse = $lastfm->nowListening('AnyUsername'); 
+ 
+// Get the weekly top albums given a starting day 
+$albums = $lastfm->userWeeklyTopAlbums('AnyUsername', new \DateTime('2017-01-01'));                      
+ 
+// Get the weekly top artists given a starting day 
+$artists = $lastfm->userWeeklyTopArtists('AnyUsername', new \DateTime('2017-01-01'));
+ 
+// Get the weekly top tracks given a starting day 
+$tracks = $lastfm->userWeeklyTopTracks('AnyUsername', new \DateTime('2017-01-01'));
 ```
 
 ### Filtering results
