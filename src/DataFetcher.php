@@ -49,7 +49,7 @@ class DataFetcher
 
         $this->data = json_decode((string) $this->responseString->getBody(), true);
 
-        if ($this->responseString->getStatusCode() !== 200 || $this->data === null) {
+        if (200 !== $this->responseString->getStatusCode() || null === $this->data) {
             $this->throwResponseException();
         }
 
@@ -67,7 +67,7 @@ class DataFetcher
      */
     protected function throwResponseException()
     {
-        if ($this->data === null) {
+        if (null === $this->data) {
             throw new ResponseException('Undecodable response was returned.');
         }
 
@@ -117,7 +117,7 @@ class DataFetcher
 
     protected function isNestedPluckString(string $pluck): bool
     {
-        return strpos($pluck, '.') !== false;
+        return false !== strpos($pluck, '.');
     }
 
     protected function getFirstPluckPart(string $pluck): string
