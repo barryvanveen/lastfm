@@ -42,7 +42,7 @@ Update `config/app.php` by adding the LastfmServiceProvider:
 ```php
 'providers' => [
     ...
-    Barryvanveen\Lastfm\LastfmServiceprovider::class,
+    Barryvanveen\Lastfm\LastfmServiceProvider::class,
 ];
 ```
 
