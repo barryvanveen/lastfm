@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+    php:
+        container_name: lastfm-php
+        build:
+            context: ./docker/php80
+        working_dir: /app
+        volumes:
+            - ./:/app

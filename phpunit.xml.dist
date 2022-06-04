@@ -14,18 +14,20 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
+    <coverage cacheDirectory="./tests/cache"
+              processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">src/</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="tap" target="build/report.tap"/>
-        <log type="junit" target="build/report.junit.xml"/>
-        <log type="coverage-html" target="build/coverage" charset="UTF-8" yui="true" highlight="true"/>
-        <log type="coverage-text" target="build/coverage.txt"/>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
+        </include>
+        <exclude>
+            <file>src/LastfmServiceProvider.php</file>
+        </exclude>
+        <report>
+            <clover outputFile="./tests/build/clover.xml"/>
+            <html outputDirectory="./tests/build/coverage" lowUpperBound="50" highLowerBound="90"/>
+            <text outputFile="./tests/build/coverage.txt" showUncoveredFiles="false" showOnlySummary="true"/>
+        </report>
+    </coverage>
     <php>
         <env name="LASTFM_API_KEY" value="foo"/>
     </php>

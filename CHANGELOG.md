@@ -11,6 +11,14 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Removed
 ### Fixed
 
+## [2.0.0] - 2022-06-06
+### Changed
+- Require PHP >= 8.0
+
+## [1.2.1] - 2019-05-02
+### Fixed
+- Fixed typo in readme
+
 ## [1.2.0] - 2017-10-09
 ### Added
 - Added methods for retrieving weekly charts. Thanks @Bruno7kp!

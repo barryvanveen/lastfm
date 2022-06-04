@@ -9,17 +9,13 @@ use GuzzleHttp\Client;
 
 class Lastfm
 {
-    /** @var Client */
-    protected $httpClient;
+    protected Client $httpClient;
 
-    /** @var array */
-    protected $query;
+    protected array $query;
 
-    /** @var null|string */
-    protected $pluck = null;
+    protected ?string $pluck = null;
 
-    /** @var null|array */
-    protected $data = null;
+    protected ?array $data = null;
 
     /**
      * Protected Lastfm constructor. Use any of the named constructors (eg. userInfo, userTopAlbums, etc) to

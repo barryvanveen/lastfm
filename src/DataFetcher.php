@@ -6,21 +6,20 @@ namespace Barryvanveen\Lastfm;
 
 use Barryvanveen\Lastfm\Exceptions\MalformedDataException;
 use Barryvanveen\Lastfm\Exceptions\ResponseException;
+use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 class DataFetcher
 {
-    const LASTFM_API_BASEURL = 'http://ws.audioscrobbler.com/2.0/';
+    public const LASTFM_API_BASEURL = 'http://ws.audioscrobbler.com/2.0/';
 
-    /** @var Client */
-    protected $client;
+    protected Client $client;
 
-    /** @var ResponseInterface */
-    protected $responseString;
+    protected ResponseInterface $responseString;
 
-    /** @var array */
-    protected $data;
+    protected ?array $data;
 
     /**
      * DataFetcher constructor.
@@ -35,21 +34,27 @@ class DataFetcher
     /**
      * Get, parse and validate a response from the given url.
      *
-     * @param array       $query
-     * @param null|string $pluck
+     * @param array $query
+     * @param null $pluck
      *
+     * @throws MalformedDataException
+     * @throws ResponseException
      * @return mixed
      */
     public function get(array $query, $pluck = null)
     {
-        $this->responseString = $this->client->get(self::LASTFM_API_BASEURL, [
-            'http_errors' => false,
-            'query' => $query,
-        ]);
+        try {
+            $this->responseString = $this->client->get(self::LASTFM_API_BASEURL, [
+                'http_errors' => false,
+                'query' => $query,
+            ]);
 
-        $this->data = json_decode((string) $this->responseString->getBody(), true);
+            $this->data = json_decode((string) $this->responseString->getBody(), true);
+        } catch (Exception $exception) {
+            throw new ResponseException('Something when wrong getting data from Last.fm', $exception->getCode(), $exception);
+        }
 
-        if (200 !== $this->responseString->getStatusCode() || null === $this->data) {
+        if (StatusCodeInterface::STATUS_OK !== $this->responseString->getStatusCode() || null === $this->data) {
             $this->throwResponseException();
         }
 
@@ -65,7 +70,7 @@ class DataFetcher
      *
      * @throws ResponseException
      */
-    protected function throwResponseException()
+    protected function throwResponseException(): void
     {
         if (null === $this->data) {
             throw new ResponseException('Undecodable response was returned.');

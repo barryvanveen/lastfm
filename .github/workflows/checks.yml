@@ -1,0 +1,65 @@
+name: Checks
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: none
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Install dependencies
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-stable
+      - name: Check code style
+        run: vendor/bin/php-cs-fixer fix --dry-run
+
+  build-lowest-version:
+    name: Lowest version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: none
+      - name: Install dependencies
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-stable --prefer-lowest
+      - name: Unit tests
+        run: vendor/bin/phpunit --verbose --configuration phpunit.xml.dist
+
+  build-latest-versions:
+    name:  Latest versions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: xdebug
+      - name: Install dependencies
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
+      - name: Unit tests
+        run: vendor/bin/phpunit --verbose --configuration phpunit.xml.dist --coverage-clover build/coverage.clover --coverage-html build/coverage
+      - name: Code coverage
+        run: vendor/bin/coverage-check build/coverage.clover clover 80 --only-percentage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v2
+        with:
+            name: coverage
+            path: build

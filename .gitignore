@@ -1,6 +1,9 @@
 /build
 /node_modules
+/tests/build
+/tests/cache
 /vendor
-coverage.xml
-.php_cs.cache
+.php-cs-fixer.cache
+.phpunit.result.cache
+composer.lock
 phpunit.xml
