@@ -1,10 +1,7 @@
-# Last.fm API client for PHP 7
+# Last.fm API client for PHP 8
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
 * [API keys](#api-keys)
@@ -46,7 +43,7 @@ Update `config/app.php` by adding the LastfmServiceProvider:
 ];
 ```
 
-If you are using Laravel 5.5 the service provider will be used automagically by Laravel's [package discovery](https://laravel.com/docs/5.5/packages#package-discovery).
+If you are using Laravel 5.5 or higher, the service provider will be detected automagically by Laravel's [package discovery](https://laravel.com/docs/5.5/packages#package-discovery).
 
 Tested against Laravel 5.* but probably works in most versions because it is so simple. Please create an issue if it 
 doesn't work for you. 
@@ -140,7 +137,7 @@ Read the official API documentation at [http://www.last.fm/api](http://www.last.
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Testing
-Copy `phpunit.xml.dist` to `phpunit.xml` and fill in your own LASTFM_API_KEY. Then run the tests using:  
+Copy `phpunit.xml.dist` to `phpunit.xml`. Then run the tests using:  
 
 ``` bash
 $ composer test
@@ -165,15 +162,9 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 [ico-version]: https://img.shields.io/packagist/v/barryvanveen/lastfm.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/barryvanveen/lastfm/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/barryvanveen/lastfm.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/barryvanveen/lastfm.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/barryvanveen/lastfm.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/barryvanveen/lastfm
-[link-travis]: https://travis-ci.org/barryvanveen/lastfm
-[link-scrutinizer]: https://scrutinizer-ci.com/g/barryvanveen/lastfm/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/barryvanveen/lastfm
 [link-downloads]: https://packagist.org/packages/barryvanveen/lastfm
 [link-author]: https://github.com/barryvanveen
 [link-contributors]: ../../contributors
